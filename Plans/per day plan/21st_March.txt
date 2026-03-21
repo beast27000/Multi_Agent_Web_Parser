@@ -1,0 +1,97 @@
+WHAT WE'VE ACCOMPLISHED (TODAY)
+STEP 1: PYDANTIC MODELS - FULLY TAUGHT (4 files)
+File	Purpose	Key Class	Enum	Status
+intent.py	User query understanding	IntentSchema	QueryType (5 types)	Explained
+chunk.py	Extracted web content	ChunkSchema	ChunkLabel (8 types)	Explained
+search_plan.py	Search strategy	SearchPlanSchema	FallbackAPIType	Explained
+ranking.py	Final ranked results	RankingResultSchema	RankingStrategy	Explained
+Teaching Flow Used:
+
+Concept explanation (what & why)
+Code in fenced block (copy-paste ready)
+Key Concepts table
+How it connects to other parts
+Confirm understanding
+Data Pipeline Shown:
+
+IntentSchema → SearchPlanSchema → ChunkSchema → RankingResultSchema
+(what asked) → (how to search) → (raw data) → (final answer)
+
+WHAT'S NEXT (STEP 2: CONFIG SYSTEM)
+3 Files Coming:
+
+config/settings.py
+
+What: Central config loader (YAML + environment variables)
+Why: All agents need settings (timeouts, model paths, API keys)
+Inheritance: Pydantic BaseSettings
+config/constants.py
+
+What: Global immutable constants
+Why: Hardcode limits (8k tokens, 1800 tok/chunk, 6 parallel fetches)
+Inheritance: None
+config/config_default.yaml
+
+What: User config template
+Why: User can customize without touching code
+Inheritance: None
+CODE FORMAT I'M USING (AND WILL CONTINUE)
+Always:
+
+Brief explanations (3-5 lines max)
+Modular code (not monolithic)
+Type hints + docstrings
+Copy-paste ready (just select & paste)
+Key Concepts table (if new pattern)
+Connection to previous/next layer
+No icons, clean text only
+Questions to confirm understanding
+Example Format:
+
+## File Name: description
+
+What it does + Why it matters
+
+The Code
+[fenced block here]
+
+Key Concepts
+[table]
+
+How It Connects
+[explanation]
+
+Ready?
+
+HOW I'LL CONTINUE HELPING
+Teaching Cycle (same every time):
+
+Show one or two files
+Explain key parts (brief)
+Show real examples
+Explain connections
+Ask if ready for next
+Repeat
+If You Have Questions:
+
+Ask about NEW concept → I explain it
+Confused about pattern → I break it down
+Want to understand better → I give more examples
+Ready to move faster → Tell me, I'll adjust
+Never Will I:
+
+Edit your files directly
+Create unauthorized .md files
+Provide monolithic 1000-line blocks
+Use overly verbose explanations
+Forget the 4 hard rules
+CURRENT CHECKPOINT
+Models (Step 1): ✅ All 4 files taught, ready to copy
+Config (Step 2): ⏳ Ready to teach next
+Dependency Order: models → config → logger → utils → memory → etl → tools
+
+Your Next Action:
+
+Copy the 4 model files into your editor (intent.py, chunk.py, search_plan.py, ranking.py)
+Test imports: python -c "from Shared_core.models import *"
+Say "models done, config next" → We move to Step 2

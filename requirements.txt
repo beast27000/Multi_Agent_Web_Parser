@@ -1,0 +1,28 @@
+# Project Root: requirements.txt
+
+# Data validation & config
+pydantic==2.5.0
+pydantic-settings==2.1.0
+python-dotenv==1.0.0
+
+# Web scraping & parsing
+beautifulsoup4==4.12.2
+playwright==1.40.0
+requests==2.31.0
+
+# Vector DB & memory
+chromadb==0.4.17
+redis==5.0.1
+
+# Tokenization
+tiktoken==0.5.2
+transformers==4.36.0
+
+# Utilities & metrics
+psutil==5.9.6
+aiohttp==3.9.1
+pyyaml==6.0.1
+
+# Testing (for later)
+pytest==7.4.3
+pytest-asyncio==0.21.1
