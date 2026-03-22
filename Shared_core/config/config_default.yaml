@@ -1,1 +1,40 @@
 # Default values
+
+# Shared_core/config/config_default.yaml
+
+# Model Configuration (local Qwen LLM)
+model:
+  name: "Qwen2-VL-3B-Instruct"  # Local Qwen model identifier
+  context_size: 27000           # Max context tokens for Qwen
+  max_tokens_per_call: 8000     # Max output tokens per inference call
+
+# Redis Cache (for deduplication + search result caching)
+redis:
+  host: "localhost"
+  port: 6379
+  db: 0
+  password: null                # Set if Redis requires authentication
+  cache_ttl_seconds: 2700       # 45 minutes — chunk cache lifetime
+
+# Chroma Vector Store (semantic search on fetched chunks)
+chroma:
+  persist_directory: "./chroma_data"  # Where embeddings are stored
+  collection_name: "web_chunks"       # Chroma collection for this project
+
+# Logging & Metrics
+logging:
+  log_dir: "./logs"
+  json_log_file: "agent_metrics.jsonl"  # Structured JSON logs
+  log_level: "INFO"                     # DEBUG, INFO, WARNING, ERROR
+
+# Request & Fetch Settings
+requests:
+  timeout_seconds: 30           # HTTP timeout per fetch
+  max_retries: 2                # Retry failed fetches this many times
+  user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"  # Stealth header
+
+# Feature Flags (optional, for A/B testing)
+features:
+  enable_redis_cache: true
+  enable_chroma_vector_search: true
+  enable_fallback_search_api: true
