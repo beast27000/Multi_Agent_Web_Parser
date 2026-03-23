@@ -4,6 +4,11 @@ from crewai_tools import tool
 from typing import Any, Dict, List
 import asyncio
 import json
+import os
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 # Import from Shared_core
 import sys
@@ -135,6 +140,10 @@ class CrewAIOrchestrator:
     def __init__(self):
         self.logger = StructuredLogger(__name__)
         self.tools_adapter = CrewAIToolsAdapter()
+        # Set LLM configuration from environment variables for CrewAI
+        os.environ["OPENAI_API_BASE"] = os.getenv("LLM_BASE_URL", "http://192.168.1.31:1234")
+        os.environ["OPENAI_MODEL_NAME"] = os.getenv("LLM_MODEL", "qwen/qwen3-vl-4b")
+        os.environ["OPENAI_API_KEY"] = "local-no-key-needed"  # Required by CrewAI but not used for local
         self.crew = self._build_crew()
     
     def _build_crew(self) -> Crew:

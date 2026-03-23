@@ -4,6 +4,11 @@ from autogen.agentchat.conversable_agent import ConversableAgent
 from typing import Any, Dict, List, Optional
 import json
 import asyncio
+import os
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 # Import from Shared_core
 import sys
@@ -153,17 +158,17 @@ class AutoGenOrchestrator:
         self.logger = StructuredLogger(__name__)
         self.tools_adapter = AutoGenToolsAdapter()
         
-        # Default LLM config (local Qwen via ollama)
+        # Default LLM config (read from .env)
         if llm_config is None:
             llm_config = {
                 "config_list": [
                     {
-                        "model": "qwen-3-4b-vl",  # Local model
-                        "api_type": "local",
-                        "base_url": "http://localhost:8000/v1"
+                        "model": os.getenv("LLM_MODEL", "qwen/qwen3-vl-4b"),
+                        "api_type": os.getenv("LLM_API_TYPE", "local"),
+                        "base_url": os.getenv("LLM_BASE_URL", "http://192.168.1.31:1234")
                     }
                 ],
-                "temperature": 0.7,
+                "temperature": float(os.getenv("LLM_TEMPERATURE", "0.7")),
             }
         
         self.llm_config = llm_config

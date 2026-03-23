@@ -5,6 +5,11 @@ from langgraph.types import Command
 import json
 import asyncio
 from dataclasses import dataclass
+import os
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 # Import from Shared_core
 from sys import path
