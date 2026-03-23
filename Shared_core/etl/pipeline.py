@@ -18,7 +18,8 @@ Log everything for evaluation
 
 from typing import List, Dict, Optional, Any
 from datetime import datetime
-from ..models.chunk import ChunkSchema, ChunkLabel, IntentSchema
+from ..models.chunk import ChunkSchema, ChunkLabel
+from ..models.intent import IntentSchema
 from ..models.search_plan import SearchPlanSchema
 from ..memory.redis_manager import RedisManager
 from ..memory.chroma_manager import ChromaManager

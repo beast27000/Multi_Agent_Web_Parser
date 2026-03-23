@@ -13,7 +13,7 @@ load_dotenv()
 
 # Import from Shared_core
 from sys import path
-path.insert(0, "../")
+path.insert(0, ".")
 from Shared_core.models.intent import IntentSchema
 from Shared_core.models.search_plan import SearchPlanSchema
 from Shared_core.models.chunk import ChunkSchema
@@ -83,7 +83,7 @@ async def agent_intent_extractor(state: AgentState) -> Command:
     Input: raw query string
     Output: IntentSchema with intent_type, keywords, preferred_domains
     """
-    logger = StructuredLogger(__name__)
+    logger = StructuredLogger("./logs/intent_extractor.jsonl", "IntentExtractor")
     query = state["query"]
     
     try:
@@ -115,7 +115,7 @@ async def agent_intent_extractor(state: AgentState) -> Command:
         )
         
         log_msg = f"[IntentExtractor] Parsed query '{query[:50]}...' as {intent_type}"
-        logger.log_metric("intent_extraction", 1.0, {"intent_type": intent_type})
+        logger.log_metric("intent_extraction", metadata={"intent_type": intent_type})
         
         return Command(update={
             "intent": intent,
@@ -124,7 +124,7 @@ async def agent_intent_extractor(state: AgentState) -> Command:
         
     except Exception as e:
         error_msg = f"[IntentExtractor] Error: {str(e)}"
-        logger.log_metric("intent_extraction_error", 1.0, {"error": str(e)})
+        logger.log_metric("intent_extraction_error", metadata={"error": str(e)})
         return Command(update={
             "error_log": state["error_log"] + [error_msg]
         }, goto=END)
@@ -141,7 +141,7 @@ async def agent_search_planner(state: AgentState) -> Command:
     Input: IntentSchema
     Output: SearchPlanSchema, search_results
     """
-    logger = StructuredLogger(__name__)
+    logger = StructuredLogger("./logs/search_planner.jsonl", "SearchPlanner")
     intent = state["intent"]
     
     if not intent:
@@ -179,7 +179,7 @@ async def agent_search_planner(state: AgentState) -> Command:
         ]
         
         log_msg = f"[SearchPlanner] Found {len(results_list)} results for '{intent.query[:30]}...'"
-        logger.log_metric("search_plan_execution", len(results_list), {"query": intent.query})
+        logger.log_metric("search_plan_execution", metadata={"query": intent.query, "num_results": len(results_list)})
         
         return Command(update={
             "search_plan": search_plan,
@@ -189,7 +189,7 @@ async def agent_search_planner(state: AgentState) -> Command:
         
     except Exception as e:
         error_msg = f"[SearchPlanner] Error: {str(e)}"
-        logger.log_metric("search_plan_error", 1.0, {"error": str(e)})
+        logger.log_metric("search_plan_error", metadata={"error": str(e)})
         return Command(update={
             "error_log": state["error_log"] + [error_msg]
         }, goto=END)
@@ -205,7 +205,7 @@ async def agent_multi_site_fetcher(state: AgentState) -> Command:
     Input: search_results (list of URLs)
     Output: fetched_html (dict of url -> html), fetch_errors
     """
-    logger = StructuredLogger(__name__)
+    logger = StructuredLogger("./logs/multi_site_fetcher.jsonl", "MultiSiteFetcher")
     search_results = state["search_results"]
     
     if not search_results:
@@ -233,7 +233,7 @@ async def agent_multi_site_fetcher(state: AgentState) -> Command:
                 fetch_errors[url] = str(e)
         
         log_msg = f"[MultiSiteFetcher] Fetched {len(fetched_html)}/{len(urls)} URLs"
-        logger.log_metric("multi_site_fetch", len(fetched_html), {"total_urls": len(urls)})
+        logger.log_metric("multi_site_fetch", metadata={"fetched_urls": len(fetched_html), "total_urls": len(urls)})
         
         return Command(update={
             "fetched_html": fetched_html,
@@ -243,7 +243,7 @@ async def agent_multi_site_fetcher(state: AgentState) -> Command:
         
     except Exception as e:
         error_msg = f"[MultiSiteFetcher] Error: {str(e)}"
-        logger.log_metric("multi_site_fetch_error", 1.0, {"error": str(e)})
+        logger.log_metric("multi_site_fetch_error", metadata={"error": str(e)})
         return Command(update={
             "error_log": state["error_log"] + [error_msg]
         }, goto=END)
@@ -259,7 +259,7 @@ async def agent_chunk_processor(state: AgentState) -> Command:
     Input: fetched_html
     Output: chunks (list of ChunkSchema), chunk_count
     """
-    logger = StructuredLogger(__name__)
+    logger = StructuredLogger("./logs/chunk_processor.jsonl", "ChunkProcessor")
     fetched_html = state["fetched_html"]
     intent = state["intent"]
     
@@ -299,10 +299,10 @@ async def agent_chunk_processor(state: AgentState) -> Command:
                 )
                 all_chunks.append(chunk)
             except Exception as e:
-                logger.log_metric("chunk_process_url_error", 1.0, {"url": url, "error": str(e)})
+                logger.log_metric("chunk_process_url_error", metadata={"url": url, "error": str(e)})
         
         log_msg = f"[ChunkProcessor] Processed {len(all_chunks)} chunks from {len(fetched_html)} URLs"
-        logger.log_metric("chunk_processing", len(all_chunks), {"input_urls": len(fetched_html)})
+        logger.log_metric("chunk_processing", metadata={"chunks_created": len(all_chunks), "input_urls": len(fetched_html)})
         
         return Command(update={
             "chunks": all_chunks,
@@ -312,7 +312,7 @@ async def agent_chunk_processor(state: AgentState) -> Command:
         
     except Exception as e:
         error_msg = f"[ChunkProcessor] Error: {str(e)}"
-        logger.log_metric("chunk_processing_error", 1.0, {"error": str(e)})
+        logger.log_metric("chunk_processing_error", metadata={"error": str(e)})
         return Command(update={
             "error_log": state["error_log"] + [error_msg]
         }, goto=END)
@@ -328,7 +328,7 @@ async def agent_cross_site_ranker(state: AgentState) -> Command:
     Input: chunks
     Output: ranked_chunks, deduped_chunks
     """
-    logger = StructuredLogger(__name__)
+    logger = StructuredLogger("./logs/cross_site_ranker.jsonl", "CrossSiteRanker")
     chunks = state["chunks"]
     intent = state["intent"]
     
@@ -359,7 +359,7 @@ async def agent_cross_site_ranker(state: AgentState) -> Command:
         deduped = ranker.deduplicate_chunks(chunks, threshold=0.85)
         
         log_msg = f"[CrossSiteRanker] Ranked {len(ranked)} chunks, deduped to {len(deduped)}"
-        logger.log_metric("ranking", len(ranked), {"deduped": len(deduped)})
+        logger.log_metric("ranking", metadata={"ranked_chunks": len(ranked), "deduped_chunks": len(deduped)})
         
         return Command(update={
             "ranked_chunks": ranked[:MAX_CHUNKS_PER_AGENT],  # Top N
@@ -369,7 +369,7 @@ async def agent_cross_site_ranker(state: AgentState) -> Command:
         
     except Exception as e:
         error_msg = f"[CrossSiteRanker] Error: {str(e)}"
-        logger.log_metric("ranking_error", 1.0, {"error": str(e)})
+        logger.log_metric("ranking_error", metadata={"error": str(e)})
         return Command(update={
             "error_log": state["error_log"] + [error_msg]
         }, goto=END)
@@ -385,7 +385,7 @@ async def agent_final_synthesizer(state: AgentState) -> Command:
     Input: ranked_chunks (top chunk+score pairs), intent
     Output: final_answer, provenance
     """
-    logger = StructuredLogger(__name__)
+    logger = StructuredLogger("./logs/final_synthesizer.jsonl", "FinalSynthesizer")
     ranked_chunks = state["ranked_chunks"]
     intent = state["intent"]
     
@@ -418,7 +418,7 @@ async def agent_final_synthesizer(state: AgentState) -> Command:
         final_answer = "".join(answer_parts)
         
         log_msg = f"[FinalSynthesizer] Generated answer with {len(provenance)} sources"
-        logger.log_metric("synthesis", len(provenance), {"top_chunks": len(top_chunks)})
+        logger.log_metric("synthesis", metadata={"provenance_items": len(provenance), "top_chunks": len(top_chunks)})
         
         return Command(update={
             "final_answer": final_answer,
@@ -428,7 +428,7 @@ async def agent_final_synthesizer(state: AgentState) -> Command:
         
     except Exception as e:
         error_msg = f"[FinalSynthesizer] Error: {str(e)}"
-        logger.log_metric("synthesis_error", 1.0, {"error": str(e)})
+        logger.log_metric("synthesis_error", metadata={"error": str(e)})
         return Command(update={
             "error_log": state["error_log"] + [error_msg]
         }, goto=END)
@@ -447,7 +447,7 @@ class LangGraphOrchestrator:
     
     def __init__(self):
         self.graph = self._build_graph()
-        self.logger = StructuredLogger(__name__)
+        self.logger = StructuredLogger("./logs/orchestrator.jsonl", "LangGraphOrchestrator")
     
     def _build_graph(self) -> StateGraph:
         """Build the LangGraph state graph with all 6 agents."""
@@ -500,7 +500,7 @@ class LangGraphOrchestrator:
             if event and isinstance(event, dict):
                 result = list(event.values())[0] if event else None
         
-        self.logger.log_metric("orchestrator_run", 1.0)
+        self.logger.log_metric("orchestrator_run")
         return result or initial_state
     
     def run_sync(self, query: str) -> Dict[str, Any]:

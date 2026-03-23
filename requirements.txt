@@ -1,22 +1,32 @@
 # Project Root: requirements.txt
 
 # Data validation & config
-pydantic==2.5.0
-pydantic-settings==2.1.0
+pydantic==2.7.4
+pydantic-settings==2.2.0
 python-dotenv==1.0.0
 
 # Web scraping & parsing
 beautifulsoup4==4.12.2
 playwright==1.40.0
 requests==2.31.0
+httpx==0.25.2
+duckduckgo-search==3.9.10
 
 # Vector DB & memory
-chromadb==0.4.17
+chromadb==0.4.24
 redis==5.0.1
 
 # Tokenization
 tiktoken==0.5.2
 transformers==4.36.0
+numpy<2.0
+
+# AI Agent Frameworks
+langgraph==1.1.3
+
+# Web Framework
+fastapi==0.104.1
+uvicorn==0.24.0
 
 # Utilities & metrics
 psutil==5.9.6

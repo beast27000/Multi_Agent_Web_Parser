@@ -18,11 +18,15 @@ Query type descriptions
 # Hard Constraints (from rules.md - NEVER change during runtime)
 MAX_TOKENS_PER_CALL = 8000          # Qwen context limit
 MAX_CHUNK_SIZE = 1800                # Keep reasoning context
+MAX_CHUNK_TOKENS = 1800              # Alias for MAX_CHUNK_SIZE (for compatibility)
+CHUNK_OVERLAP_TOKENS = 200           # Token overlap for context preservation
 MAX_CHUNKS_PER_QUERY = 3             # Agent sees 2-3 chunks max
 
 # Parallel execution limits
 MAX_PARALLEL_FETCHES = 6             # Don't overload servers
 MIN_PARALLEL_FETCHES = 1
+MAX_CHUNKS_PER_AGENT = 3             # Alias: max chunks agent should process (same as MAX_CHUNKS_PER_QUERY)
+DEFAULT_SEARCH_RESULTS = 10          # Default number of search results to fetch
 
 # Cache config (static)
 REDIS_CACHE_TTL_MINUTES = 45         # Query result expiry

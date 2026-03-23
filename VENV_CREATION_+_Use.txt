@@ -7,3 +7,6 @@
 # (B) To Activate venv use:
 
 1) .\venv\Scripts\Activate.ps1
+
+
+ok now help me setup the right venvs for crew ai and autogen i need this venv to be named diffretly to same goes for requiremnt.txt i will add in the requiremnts.txt directly into crewai and autogent 

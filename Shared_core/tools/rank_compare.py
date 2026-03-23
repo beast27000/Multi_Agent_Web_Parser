@@ -4,8 +4,8 @@
 
 from typing import List, Dict, Optional, Tuple
 from datetime import datetime
-from ..models.chunk import ChunkSchema, RankingResultSchema, RankingStrategy
-from ..models.ranking import RankingResultSchema
+from ..models.chunk import ChunkSchema
+from ..models.ranking import RankingResultSchema, RankingStrategy
 from ..utils.token_counter import TokenCounter
 from ..config.constants import DOMAIN_AUTHORITY
 from ..logger.structured_logger import StructuredLogger

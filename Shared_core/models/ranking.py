@@ -6,10 +6,10 @@ from enum import Enum
 
 
 class RankingStrategy(str, Enum):
-    RELEVANCE = "relevance"              # How well does it match query?
-    RECENCY = "recency"                  # How fresh is the info?
-    SOURCE_AUTHORITY = "source_authority"  # How trustworthy is the site?
-    CONSENSUS = "consensus"              # Do multiple sites agree?
+    WEIGHTED = "weighted"                # Combined scoring: semantic + authority
+    SEMANTIC_ONLY = "semantic_only"      # Match relevance to query only
+    AUTHORITY_ONLY = "authority_only"    # Trust/domain ranking only
+    CONSENSUS = "consensus"              # Multiple sources agreement
 
 
 class RankedChunk(BaseModel):

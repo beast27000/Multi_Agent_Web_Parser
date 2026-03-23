@@ -35,8 +35,8 @@ class StructuredLogger:
     def log_metric(
         self,
         event_name: str,
-        wall_time_ms: float,
-        tokens_used: int,
+        wall_time_ms: float = 0,
+        tokens_used: int = 0,
         success: bool = True,
         error_msg: Optional[str] = None,
         metadata: Optional[dict] = None
